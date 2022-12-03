@@ -5,6 +5,7 @@ from scipy.io import wavfile
 
 fs, audio = wavfile.read("./outputs/figs/ex.wav")
 
+# WSO 2 MIX ROOM SETUP -> CHECK PAPER -> COPY ROOM SETUP (LIST OF ROOMS)
 # Create a 4 by 6 metres shoe box room
 room = pra.ShoeBox([4,6]) # Or AnechoicRoom 
 

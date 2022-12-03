@@ -8,6 +8,7 @@ from tqdm import tqdm
 PATH = "/project/data_asr/CHiME5/data/wsj0-mix2/2speakers/wav8k/min/tr/mix/"
 
 for file in tqdm(os.listdir(PATH)):
+    # TWO / 3 SIGNAL SOURCES!!!
 
     fs, audio = wavfile.read(PATH+file)
 
