@@ -60,7 +60,7 @@ def same_length(a:torch.Tensor,b:torch.Tensor):
         b = b.narrow(0,0,len_a)
     return a, b
 
-channels = ["twoChannelRoom/", "oneChannelRoom/"]
+channels = ["oneChannelRoom/","twoChannelRoom/"]
 scenarios = ["mix/","s1/","s2/"]
 
 def create_dataset(part: list, subfolder: str):
@@ -80,10 +80,14 @@ def create_dataset(part: list, subfolder: str):
                 wav_a = wav_a.numpy()
                 wav_b = wav_b.numpy()
                 # Simulate room and obtain mix / s1 / s2
+                #print(wav_a.shape)
+                #print(wav_b.shape)
                 room = pra.ShoeBox([4,6], fs=fs)
+                if wav_a.shape[0] != wav_b.shape[0]:
+                    print("SOMETHING IS NOT RIGHT",wav_a.shape[0],wav_b.shape[0])
 
                 if scenario == "mix/":
-                    room.add_source([2.5, 3.5], signal=wav_a, delay=0)
+                    room.add_source([3.5, 3.0], signal=wav_a, delay=0)
                     room.add_source([0.5, 3.0], signal=wav_b, delay=0)
                     if channel == "oneChannelRoom/":
                         R = pra.linear_2D_array([2, 1.5], 1, 0, 0.1)
@@ -105,9 +109,8 @@ def create_dataset(part: list, subfolder: str):
                 name_file = line[0].split("/")[-1][:-4] + "_" + line[1] + "_" + line[2].split("/")[-1][:-4] + line[3] + ".wav"
                 room.mic_array.to_wav(
                     (CREATE_PATH + subfolder + scenario + name_file),
-                    8000,
-                    norm=True,
-                    bitdepth=np.int16,
+                    #norm=True,
+                    #bitdepth=np.int16,
                 )
     return "Done"
 
