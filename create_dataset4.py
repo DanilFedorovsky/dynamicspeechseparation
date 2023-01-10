@@ -1,5 +1,4 @@
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = "2"
 import numpy as np
 import matplotlib.pyplot as plt
 import pyroomacoustics as pra
@@ -9,6 +8,7 @@ from tqdm import tqdm
 import torchaudio
 import torch
 from scipy.io import wavfile
+torch.cuda.set_device(3)
 
 wsj0path = "/project/data_asr/wham_dataset/whamr_data/wsj0_raw/"
 
@@ -60,7 +60,7 @@ def same_length(a:torch.Tensor,b:torch.Tensor):
         b = b.narrow(0,0,len_a)
     return a, b
 
-channels = ["oneChannelRoom/","twoChannelRoom/"]
+channels = ["fourChannelRoom/"]
 scenarios = ["mix/","s1/","s2/"]
 
 def create_dataset(part: list, subfolder: str):
@@ -89,11 +89,8 @@ def create_dataset(part: list, subfolder: str):
                 if scenario == "mix/":
                     room.add_source([3.5, 5.0], signal=wav_a, delay=0)
                     room.add_source([0.5, 5.0], signal=wav_b, delay=0)
-                    if channel == "oneChannelRoom/":
-                        R = pra.linear_2D_array([2, 1.5], 1, 0, 0.1)
-                        room.add_microphone_array(pra.Beamformer(R, room.fs))
-                    elif channel == "twoChannelRoom/":
-                        R = pra.linear_2D_array([2, 1.5], 2, 0, 0.1)
+                    if channel == "fourChannelRoom/":
+                        R = pra.linear_2D_array([2, 1.5], 4, 0, 0.1)
                         room.add_microphone_array(pra.Beamformer(R, room.fs))
                 elif scenario == "s1/":
                     room.add_source([2.5, 3.5], signal=wav_a, delay=0)
